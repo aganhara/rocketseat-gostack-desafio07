@@ -1,6 +1,6 @@
 import Reactotron from 'reactotron-react-native';
 
-if (__DEV__) {
+if (process.env.NODE_ENV === 'development') {
   const tron = Reactotron.configure()
     .useReactNative()
     .connect();
