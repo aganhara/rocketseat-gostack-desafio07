@@ -1,4 +1,7 @@
 # Rocketshoes
+<div style="text-align: center">
+  <img src="https://raw.githubusercontent.com/aganhara/rocketseat-gostack-desafio07/master/.github/mockup.png" style="width: 300px;">
+</div>
 
 Aplicação desenvolvida para o desafio do 7º módulo do curso Rocketseat - GoStack.
 
