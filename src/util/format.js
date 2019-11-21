@@ -3,6 +3,6 @@
 //   currency: 'BRL',
 // });
 
-export const { format: formatPrice } = price => {
+export function formatPrice(price) {
   return price;
-};
+}

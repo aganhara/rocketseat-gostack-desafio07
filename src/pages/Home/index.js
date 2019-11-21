@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import * as CartActions from '../../store/modules/cart/actions';
 
 import {
   Container,
@@ -16,6 +18,17 @@ import {
 import api from '../../services/api';
 
 export default function Home() {
+  const dispatch = useDispatch();
+
+  const amount = useSelector(state => {
+    return state.cart.reduce((sumAmount, product) => {
+      sumAmount[product.id] = product.amount;
+      return sumAmount;
+    }, {});
+  });
+
+  console.tron.log(amount);
+
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -30,6 +43,11 @@ export default function Home() {
     loadProducts();
   }, []);
 
+  function handleAddProduct(id) {
+    console.tron.log(amount[id]);
+    dispatch(CartActions.addToCartRequest(id));
+  }
+
   return (
     <>
       <Container>
@@ -42,10 +60,10 @@ export default function Home() {
               <ProductImage source={{ uri: item.image }} />
               <ProductTitle>{item.title}</ProductTitle>
               <ProductPrice>{item.price}</ProductPrice>
-              <AddButton>
+              <AddButton onPress={() => handleAddProduct(item.id)}>
                 <ProductAmount>
                   <Icon name="add-shopping-cart" color="#fff" size={20} />
-                  <ProductAmountText>{item.amount || 0}</ProductAmountText>
+                  <ProductAmountText>{amount[item.id] || 0}</ProductAmountText>
                 </ProductAmount>
                 <AddButtonText>ADICIONAR</AddButtonText>
               </AddButton>
