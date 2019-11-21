@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
 import {
   Container,
   Products,
@@ -22,21 +24,33 @@ import {
 } from './styles';
 
 import colors from '../../styles/colors';
+import * as CartActions from '../../store/modules/cart/actions';
 
 export default function Cart() {
-  const total = 'R$ 15200,00';
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      title: 'Tênis de Caminhada Leve e muito Confortável Confortável',
-      price: 179.9,
-      priceFormatted: 'R$ 179,90',
-      amount: 1,
-      subtotal: 'R$ 179,90',
-      image:
-        'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg',
-    },
-  ]);
+  const dispatch = useDispatch();
+  const products = useSelector(state => {
+    return state.cart.map(product => ({
+      ...product,
+      subtotal: product.price * product.amount,
+      priceFormatted: product.price,
+    }));
+  });
+
+  const total = useSelector(state =>
+    state.cart.reduce(
+      (totalSum, product) => totalSum + product.price * product.amount,
+      0
+    )
+  );
+
+  function increment(product) {
+    dispatch(CartActions.updateAmountRequest(product.id, product.amount + 1));
+  }
+
+  function decrement(product) {
+    dispatch(CartActions.updateAmountRequest(product.id, product.amount - 1));
+  }
+
   return (
     <Container>
       {products.length ? (
@@ -52,7 +66,7 @@ export default function Cart() {
                   </ProductDetails>
                 </ProductInfo>
                 <ProductControls>
-                  <ProductControlButton>
+                  <ProductControlButton onPress={() => decrement(product)}>
                     <Icon
                       name="remove-circle-outline"
                       size={20}
@@ -60,7 +74,7 @@ export default function Cart() {
                     />
                   </ProductControlButton>
                   <ProductAmount value={String(product.amount)} />
-                  <ProductControlButton>
+                  <ProductControlButton onPress={() => increment(product)}>
                     <Icon
                       name="add-circle-outline"
                       size={20}
