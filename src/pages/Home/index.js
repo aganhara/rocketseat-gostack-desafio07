@@ -16,6 +16,7 @@ import {
   AddButtonText,
 } from './styles';
 import api from '../../services/api';
+import { formatPrice } from '../../util/format';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -27,8 +28,6 @@ export default function Home() {
     }, {});
   });
 
-  console.tron.log(amount);
-
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -36,6 +35,7 @@ export default function Home() {
       const response = await api.get('/products');
       const existentProducts = response.data.map(product => ({
         ...product,
+        formattedPrice: formatPrice(product.price),
       }));
       setProducts(existentProducts);
     }
@@ -44,7 +44,6 @@ export default function Home() {
   }, []);
 
   function handleAddProduct(id) {
-    console.tron.log(amount[id]);
     dispatch(CartActions.addToCartRequest(id));
   }
 
@@ -59,7 +58,7 @@ export default function Home() {
             <Product>
               <ProductImage source={{ uri: item.image }} />
               <ProductTitle>{item.title}</ProductTitle>
-              <ProductPrice>{item.price}</ProductPrice>
+              <ProductPrice>{item.formattedPrice}</ProductPrice>
               <AddButton onPress={() => handleAddProduct(item.id)}>
                 <ProductAmount>
                   <Icon name="add-shopping-cart" color="#fff" size={20} />

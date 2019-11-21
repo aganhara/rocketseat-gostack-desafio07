@@ -25,21 +25,24 @@ import {
 
 import colors from '../../styles/colors';
 import * as CartActions from '../../store/modules/cart/actions';
+import { formatPrice } from '../../util/format';
 
 export default function Cart() {
   const dispatch = useDispatch();
   const products = useSelector(state => {
     return state.cart.map(product => ({
       ...product,
-      subtotal: product.price * product.amount,
-      priceFormatted: product.price,
+      subtotal: formatPrice(product.price * product.amount),
+      priceFormatted: formatPrice(product.price),
     }));
   });
 
   const total = useSelector(state =>
-    state.cart.reduce(
-      (totalSum, product) => totalSum + product.price * product.amount,
-      0
+    formatPrice(
+      state.cart.reduce(
+        (totalSum, product) => totalSum + product.price * product.amount,
+        0
+      )
     )
   );
 
