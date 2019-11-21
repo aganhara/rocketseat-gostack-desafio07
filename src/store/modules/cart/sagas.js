@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { select, call, put, all, takeLatest } from 'redux-saga/effects';
 
 import { addToCartSuccess, updateAmountSuccess } from './actions';
@@ -17,8 +18,7 @@ function* addToCart({ id }) {
   const amount = currentAmount + 1;
 
   if (amount > stockAmount) {
-    // DEU ERRRO
-    console.tron.log('Quantidade solicitada fora do estoque.');
+    Alert.alert('Quantidade solicitada fora do estoque.');
     return;
   }
 
@@ -46,7 +46,7 @@ function* updateAmount({ id, amount }) {
   const stockAmount = stock.data.amount;
 
   if (amount > stockAmount) {
-    console.tron.log('Quantidade solicitada fora de estoque');
+    Alert.alert('Quantidade solicitada fora do estoque.');
     return;
   }
 
